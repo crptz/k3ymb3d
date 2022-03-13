@@ -12,20 +12,17 @@ pub struct InputEvent {
 
 use std::{env, process::{ Command}};
 
-extern crate sudo;
+extern crate sudo;extern crate libc;
+use libc::{ O_RDONLY };
 
 
 fn main() {
 
     is_root();
 
-    let device = get_devices();
-    
-    println!("{:?}", device);
+    println!("The selected device is -> {}", select_device());
 
-    select_device();
-
-    println!("{}", device_path_exists());
+    println!("{}", device_path_exists(select_device()));
     
     // declare a variable that holds env::consts::OS
     let os = env::consts::OS;
@@ -54,18 +51,19 @@ fn is_root() {
     }
 }
 
-fn device_path_exists() -> bool {
-    let device_path = "/dev/input/event3";
+fn device_path_exists(device: String) -> bool {
+    let device_path = "/dev/input/{}".to_string().replace("{}", &device);
     let path = std::path::Path::new(&device_path);
+    println!("{}", device_path);
     path.exists()
 }
 
 
-fn select_device() {
+fn select_device() -> String {
     let  devices = get_devices();
     // declare a variable and assign it to the first element of the devices array
     let device = &devices[0];
-    println!("{:?}", device);
+    device.clone()
 }
 
 fn get_devices() -> Vec<String> {
