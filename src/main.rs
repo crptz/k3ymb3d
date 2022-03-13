@@ -10,9 +10,10 @@ pub struct InputEvent {
 }
 */
 
-use std::{env, process::{ Command}};
+use std::{env, process::{ Command}, fs};
 
 extern crate sudo;extern crate libc;
+use libc::input_keymap_entry;
 use libc::{ O_RDONLY };
 
 
@@ -22,7 +23,10 @@ fn main() {
 
     println!("The selected device is -> {}", select_device());
 
-    println!("{}", device_path_exists(select_device()));
+    device_path_exists(select_device());
+
+    
+    
     
     // declare a variable that holds env::consts::OS
     let os = env::consts::OS;
@@ -51,10 +55,15 @@ fn is_root() {
     }
 }
 
+
+fn get_path(rpath: &String) -> String {
+    rpath.to_string()
+}
+
 fn device_path_exists(device: String) -> bool {
     let device_path = "/dev/input/{}".to_string().replace("{}", &device);
     let path = std::path::Path::new(&device_path);
-    println!("{}", device_path);
+    get_path(&device_path);
     path.exists()
 }
 
@@ -77,10 +86,4 @@ fn get_devices() -> Vec<String> {
     res_str.trim().split('\n').map(|s| s.to_string()).collect()
 }
 
-/*fn am_root() -> bool {
-    match env::var("USER") {
-        Ok(val) => val == "root",
-        Err(_e) => false,
-    }
-}*/
 
