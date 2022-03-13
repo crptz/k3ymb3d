@@ -10,9 +10,7 @@ pub struct InputEvent {
 }
 */
 
-use std::{env, fs::{ self }, error::Error, process::{self, Command}};
-
-use log::debug;
+use std::{env, process::{ Command}};
 
 extern crate sudo;
 
@@ -21,14 +19,13 @@ fn main() {
 
     is_root();
 
-    if let Err(e) = read_file() {
-        println!("Application error: {}", e);
+    let device = get_devices();
+    
+    println!("{:?}", device);
 
-        process::exit(1);
-    }
+    select_device();
 
-    let filenames = get_keyboard_device_filenames();
-    println!("Detected devices: {:?}", filenames);
+    println!("{}", device_path_exists());
     
     // declare a variable that holds env::consts::OS
     let os = env::consts::OS;
@@ -45,8 +42,6 @@ fn main() {
     else  {
         println!("You are running on an unknown OS!");
     }
-    
-    println!("Hello, world!");
 }
 
 
@@ -59,34 +54,29 @@ fn is_root() {
     }
 }
 
-fn get_device() {
-    let  filename = get_keyboard_device_filenames();
-    println!("{:?}", filename);
+fn device_path_exists() -> bool {
+    let device_path = "/dev/input/event3";
+    let path = std::path::Path::new(&device_path);
+    path.exists()
 }
 
-fn read_file() -> Result<(), Box<dyn Error>> {
-    let _contents = fs::read_to_string("/proc/bus/input/devices")?;
 
-    //println!("With text:\n{}", contents);
-
-    Ok(())
+fn select_device() {
+    let  devices = get_devices();
+    // declare a variable and assign it to the first element of the devices array
+    let device = &devices[0];
+    println!("{:?}", device);
 }
 
-fn get_keyboard_device_filenames() -> Vec<String> {
-    let command_str = "grep -E 'Handlers|EV' /proc/bus/input/devices | grep -B1 120013 | grep -Eo event[0-9]+".to_string();
+fn get_devices() -> Vec<String> {
+    let command_str = "grep -E 'Handlers|EV' /proc/bus/input/devices | grep -B1 120013 | grep -Eo 'event[0-9]+'".to_string();
 
     let res = Command::new("sh").arg("-c").arg(command_str).output().unwrap_or_else(|e| {
         panic!("{}", e);
     });
     let res_str = std::str::from_utf8(&res.stdout).unwrap();
 
-    let mut filenames = Vec::new();
-    for file in res_str.trim().split('\n') {
-        let mut filename = "/dev/input/".to_string();
-        filename.push_str(file);
-        filenames.push(filename);
-    }
-    filenames
+    res_str.trim().split('\n').map(|s| s.to_string()).collect()
 }
 
 /*fn am_root() -> bool {
