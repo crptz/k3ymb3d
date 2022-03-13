@@ -4,12 +4,8 @@ use device_query::{DeviceQuery, DeviceState, DeviceEvents};
 
 fn main() {
 
-    //println!("{}", is_root());
-
     let device_state = DeviceState::new();
-
-   
-
+    
     let _guard = device_state.on_key_down(move |key| {
         println!("Down: {:#?}", key);
 
@@ -21,9 +17,7 @@ fn main() {
 
         write!(file, "{}",  key).expect("Failed to write to file");
     });
-
-    // get the key and write it to the file
-    
+        
     loop {}
 }
 
