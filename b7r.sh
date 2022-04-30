@@ -7,7 +7,7 @@ printf "Executing cargo build...\n"
 
 cargo build
 
-printf "${RED}WARNING!${WHITE} YOU ARE GOING TO SPACE...${END_COLOR}\n"
+printf "${RED}WARNING!${WHITE} YOU ARE GOING TO ${BLUE}SPACE...${END_COLOR}\n"
 
 echo -e "Normal \e[5mBlink"
 
