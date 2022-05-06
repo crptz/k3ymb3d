@@ -15,7 +15,7 @@ printf "Continue?(y/n)"
 
 read answer
 
-if (($answer = "y" || $answer = "Y" || $answer = ""))
+if [[ $answer = "y" || $answer = "Y" || $answer = "" ]]
 then
 	printf "OK!\n"
 	printf "Running cargo run...\n"
