@@ -21,19 +21,11 @@ fn main() {
         }
     });
 
-    // create a device events
+    // create a device state
     let _guard = device_state.on_key_down( move|key| {
-        
-        let mut buffer = String::from("");
 
         // check which key is pressed
-        let s = match_case(key, &mut buffer); 
-        println!("{}", s);
-        // Buffer is still initalized everytime the key is pressed
-        // maybe it's better to declare it outsite and use channels to communicate
-        // with the main thread
-        println!("{}", buffer.len());
-
+        let _s = match_case(key); 
     });
         
     loop {}

