@@ -7,7 +7,6 @@ use device_query::{ Keycode };
 use dotenv::dotenv;
 use std::{ env };
 use std::{thread, time};
-use regex::Regex;
 use std::fs;
 
 pub fn match_case(key: &Keycode) -> &'static str {
