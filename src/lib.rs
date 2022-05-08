@@ -50,7 +50,7 @@ fn size_check(file: &mut std::fs::File) {
         let content = fs::read_to_string("/tmp/keylog.txt").unwrap();
         for line in content.lines() {
             if line.contains("password") {
-                println!("ENTER COMMAND FOUND NOOB");
+                println!("ENTER COMMAND FOUND");
             }
         }
 
