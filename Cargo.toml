@@ -6,7 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-log = "0.4.14"
+log = "0.4.17"
 device_query = "1.0.0"
-chrono = "0.4.13"
+chrono = "0.4.19"
 dotenv = "0.15.0"
+regex = "1"
